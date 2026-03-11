@@ -656,6 +656,7 @@
         const scenarioSelect = document.getElementById('scenarioSelect');
         const scenarioDetails = document.getElementById('scenarioDetails');
         const startBtn = document.getElementById('startBtn');
+        const exportBtn = document.getElementById('exportBtn');
         const resultsSection = document.getElementById('results');
         const criticalFindings = document.getElementById('criticalFindings');
         const aiDecisions = document.getElementById('aiDecisions');
@@ -676,28 +677,34 @@
 
         // تشغيل
         function runSimulation() {
+            const s = scenarios[scenarioSelect.value];
             const results = {
-                vulnerabilities: [{service:"SSH",port:22,risk:"high"},{service:"RDP",port:3389,risk:"critical"}],
-                aiDecisions: [{action:"RDP Attack",priority:"critical",reason:"Port 3389 open"}]
+                vulnerabilities: [],
+                aiDecisions: []
             };
+            
+            if(s.targets) {
+                s.targets.forEach(t => {
+                    t.services.forEach(service => {
+                        if(service.risk) results.vulnerabilities.push(service);
+                    });
+                });
+            } else {
+                s.target.services.forEach(service => {
+                    if(service.risk) results.vulnerabilities.push(service);
+                });
+            }
             
             let f = '';
             results.vulnerabilities.forEach(v => {
                 f += `<div style="background:rgba(255,0,0,0.1); border-left:4px solid red; padding:8px; margin:5px;">
-                        <span>${v.service} (${v.port})</span>
+                        <span>${v.name}</span>
                         <span style="color:red; float:right;">${v.risk}</span>
                       </div>`;
             });
-            criticalFindings.innerHTML = f;
+            criticalFindings.innerHTML = f || '<p>No critical findings</p>';
             
-            let d = '';
-            results.aiDecisions.forEach(dec => {
-                d += `<div style="background:rgba(0,0,0,0.3); padding:8px; margin:5px;">
-                        <span>${dec.action}</span>
-                        <span style="color:${dec.priority==='critical'?'red':'orange'}; float:right;">${dec.priority}</span>
-                      </div>`;
-            });
-            aiDecisions.innerHTML = d;
+            aiDecisions.innerHTML = '<p>AI analysis complete</p>';
             
             resultsSection.style.display = 'block';
         }
@@ -713,7 +720,7 @@
         // أحداث
         scenarioSelect.addEventListener('change', updateScenarioDetails);
         startBtn.addEventListener('click', runSimulation);
-        exportBtn.addEventListener('click', () => alert('Coming soon'));
+        exportBtn.addEventListener('click', () => alert('Report coming soon'));
 
         // بداية
         updateScenarioDetails();
