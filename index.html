@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -112,11 +113,11 @@
             border: 1px solid rgba(255, 0, 0, 0.3);
             border-radius: 20px;
             padding: 15px;
-            transition: all 0.3s ease;
+            transition: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* حركة اللمس للجوال */
+        /* حركة اللمس الفورية */
         .glass-card:active,
         button:active,
         select:active,
@@ -125,8 +126,7 @@
             transform: scale(0.98) !important;
             background: rgba(60, 20, 20, 0.9) !important;
             border-color: #ff0000 !important;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5) !important;
-            transition: all 0.1s ease !important;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.8) !important;
         }
 
         /* للكمبيوتر hover */
@@ -255,9 +255,9 @@
             border-radius: 15px;
             color: white;
             cursor: pointer;
-            transition: all 0.3s;
             font-size: 14px;
             -webkit-tap-highlight-color: transparent;
+            transition: none;
         }
 
         .radio-group {
@@ -281,7 +281,7 @@
             border-left: 3px solid #FF0000;
             border-radius: 10px;
             margin: 10px 0;
-            transition: all 0.3s;
+            transition: none;
         }
 
         .scenario-detail p {
@@ -333,6 +333,7 @@
             flex: 1;
             text-align: center;
             -webkit-tap-highlight-color: transparent;
+            transition: none;
         }
 
         @media (min-width: 768px) {
@@ -630,25 +631,6 @@
             Plotly.newPlot('chart', [trace1, trace2, trace3], layout, {responsive: true});
         });
 
-        // ضمان حركة اللمس للجوال (طريقة إضافية)
-        document.addEventListener('DOMContentLoaded', function() {
-            const elements = document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail');
-            elements.forEach(el => {
-                el.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.98)';
-                    this.style.background = 'rgba(60, 20, 20, 0.9)';
-                    this.style.borderColor = '#ff0000';
-                    this.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.5)';
-                });
-                el.addEventListener('touchend', function() {
-                    this.style.transform = '';
-                    this.style.background = '';
-                    this.style.borderColor = '';
-                    this.style.boxShadow = '';
-                });
-            });
-        });
-
         // البيانات
         const scenarios = {
             beginner: { target: { ip: "192.168.1.100", os: "Ubuntu 20.04", services: [{name:"SSH",risk:"high"},{name:"HTTP"},{name:"HTTPS"}] }},
@@ -728,6 +710,35 @@
 
         // بداية
         updateScenarioDetails();
+    </script>
+
+    <!-- كود اللمس الفوري -->
+    <script>
+        document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
+            el.addEventListener('touchstart', function(e) {
+                this.style.transform = 'scale(0.98)';
+                this.style.background = 'rgba(60, 20, 20, 0.9)';
+                this.style.borderColor = '#ff0000';
+                this.style.boxShadow = '0 0 40px rgba(255, 0, 0, 0.8)';
+            });
+            el.addEventListener('touchend', function(e) {
+                this.style.transform = '';
+                this.style.background = '';
+                this.style.borderColor = '';
+                this.style.boxShadow = '';
+            });
+            el.addEventListener('touchmove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const touch = e.touches[0];
+                if (touch.clientX < rect.left || touch.clientX > rect.right ||
+                    touch.clientY < rect.top || touch.clientY > rect.bottom) {
+                    this.style.transform = '';
+                    this.style.background = '';
+                    this.style.borderColor = '';
+                    this.style.boxShadow = '';
+                }
+            });
+        });
     </script>
 </body>
 </html>
