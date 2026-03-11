@@ -118,11 +118,11 @@
         }
 
         /* حركة اللمس الفورية */
-        .glass-card:active,
-        button:active,
-        select:active,
-        .tab:active,
-        .scenario-detail:active {
+       .glass-card:hover,
+button:hover,
+select:hover,
+.tab:hover,
+.scenario-detail:hover {
             transform: scale(0.98) !important;
             background: rgba(60, 20, 20, 0.9) !important;
             border-color: #ff0000 !important;
@@ -710,35 +710,10 @@
 
         // بداية
         updateScenarioDetails();
-    </script>
+    
 
-    <!-- كود اللمس الفوري -->
-    <script>
-        document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
-            el.addEventListener('touchstart', function(e) {
-                this.style.transform = 'scale(0.98)';
-                this.style.background = 'rgba(60, 20, 20, 0.9)';
-                this.style.borderColor = '#ff0000';
-                this.style.boxShadow = '0 0 40px rgba(255, 0, 0, 0.8)';
-            });
-            el.addEventListener('touchend', function(e) {
-                this.style.transform = '';
-                this.style.background = '';
-                this.style.borderColor = '';
-                this.style.boxShadow = '';
-            });
-            el.addEventListener('touchmove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const touch = e.touches[0];
-                if (touch.clientX < rect.left || touch.clientX > rect.right ||
-                    touch.clientY < rect.top || touch.clientY > rect.bottom) {
-                    this.style.transform = '';
-                    this.style.background = '';
-                    this.style.borderColor = '';
-                    this.style.boxShadow = '';
-                }
-            });
-        });
-    </script>
+    
+
 </body>
 </html>
+
