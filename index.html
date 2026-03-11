@@ -116,17 +116,32 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* حركات للمس في الجوال */
-        .glass-card:active {
-            transform: scale(0.98);
-            background: rgba(60, 20, 20, 0.9);
-            border-color: #ff0000;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+        /* حركة اللمس للجوال */
+        .glass-card:active,
+        button:active,
+        select:active,
+        .tab:active,
+        .scenario-detail:active {
+            transform: scale(0.98) !important;
+            background: rgba(60, 20, 20, 0.9) !important;
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5) !important;
+            transition: all 0.1s ease !important;
         }
 
         /* للكمبيوتر hover */
         @media (hover: hover) {
             .glass-card:hover {
+                transform: translateY(-5px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4);
+                border-color: #ff0000;
+                background: rgba(40, 40, 50, 0.9);
+            }
+            
+            button:hover,
+            select:hover,
+            .tab:hover,
+            .scenario-detail:hover {
                 transform: translateY(-5px) scale(1.02);
                 box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4);
                 border-color: #ff0000;
@@ -245,19 +260,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        select:active, button:active {
-            transform: scale(0.98);
-            background: rgba(60, 20, 20, 0.9);
-            border-color: #ff0000;
-        }
-
-        @media (hover: hover) {
-            select:hover, button:hover {
-                border-color: #FF0000;
-                box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-            }
-        }
-
         .radio-group {
             display: flex;
             flex-direction: column;
@@ -280,18 +282,6 @@
             border-radius: 10px;
             margin: 10px 0;
             transition: all 0.3s;
-        }
-
-        .scenario-detail:active {
-            transform: translateX(5px);
-            background: rgba(40, 20, 20, 0.7);
-        }
-
-        @media (hover: hover) {
-            .scenario-detail:hover {
-                transform: translateX(5px);
-                background: rgba(40, 20, 20, 0.7);
-            }
         }
 
         .scenario-detail p {
@@ -351,11 +341,6 @@
                 font-size: 14px;
                 flex: none;
             }
-        }
-
-        .tab:active {
-            transform: scale(0.95);
-            background: rgba(60, 20, 20, 0.7);
         }
 
         .tab.active {
@@ -645,6 +630,25 @@
             Plotly.newPlot('chart', [trace1, trace2, trace3], layout, {responsive: true});
         });
 
+        // ضمان حركة اللمس للجوال (طريقة إضافية)
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail');
+            elements.forEach(el => {
+                el.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                    this.style.background = 'rgba(60, 20, 20, 0.9)';
+                    this.style.borderColor = '#ff0000';
+                    this.style.boxShadow = '0 0 30px rgba(255, 0, 0, 0.5)';
+                });
+                el.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                    this.style.background = '';
+                    this.style.borderColor = '';
+                    this.style.boxShadow = '';
+                });
+            });
+        });
+
         // البيانات
         const scenarios = {
             beginner: { target: { ip: "192.168.1.100", os: "Ubuntu 20.04", services: [{name:"SSH",risk:"high"},{name:"HTTP"},{name:"HTTPS"}] }},
@@ -725,21 +729,5 @@
         // بداية
         updateScenarioDetails();
     </script>
-    <script>
-    // ضمان حركة اللمس في الجوال
-    document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
-        el.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.98)';
-            this.style.background = 'rgba(60, 20, 20, 0.9)';
-            this.style.borderColor = '#ff0000';
-        });
-        el.addEventListener('touchend', function() {
-            this.style.transform = '';
-            this.style.background = '';
-            this.style.borderColor = '';
-        });
-    });
-</script>
 </body>
 </html>
-
