@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offensive Defense Simulator</title>
+    <!-- Plotly CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* الزاوية الحمراء في أعلى اليمين */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #FF0000 0%, transparent 70%);
+            opacity: 0.3;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* زاوية حمراء ثانوية */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -30px;
+            right: -30px;
+            width: 150px;
+            height: 150px;
+            border: 3px solid #FF0000;
+            transform: rotate(45deg);
+            opacity: 0.2;
+            z-index: 9998;
+            pointer-events: none;
+        }
+
+        /* كل النصوص بيضاء */
+        h1, h2, h3, h4, h5, h6, p, li, span, label {
+            color: #FFFFFF !important;
+        }
+
+        /* الخطوط */
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #FF0000, transparent);
+            margin: 20px 0;
+        }
+
+        /* العنوان */
+        .title-container {
+            text-align: center;
+            margin: 30px 0 10px;
+        }
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,0,0,0.3);
+            margin-bottom: 0;
+        }
+
+        .main-title span {
+            color: #FF0000;
+            text-shadow: 0 0 15px rgba(255,0,0,0.7);
+        }
+
+        .subtitle {
+            color: #B0B0B0;
+            font-size: 18px;
+            letter-spacing: 2px;
+        }
+
+        /* المربعات الزجاجية */
+        .glass-card {
+            background: rgba(20, 20, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4);
+            border-color: #FF0000;
+            background: rgba(40, 40, 50, 0.9);
+        }
+
+        /* المربعات العلوية */
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .metric-label {
+            color: #B0B0B0;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            margin: 5px 0;
+        }
+
+        .metric-change {
+            font-size: 12px;
+        }
+
+        .positive { color: #4CAF50; }
+        .negative { color: #ff0000; }
+        .warning { color: #FFA500; }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.9);
+            border-right: 2px solid rgba(255, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            color: #FF0000;
+            text-align: center;
+            border-bottom: 2px solid #FF0000;
+            padding-bottom: 10px;
+        }
+
+        .sidebar p {
+            color: #B0B0B0;
+            margin: 10px 0;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(20, 20, 30, 0.7);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:hover, button:hover {
+            border-color: #FF0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .radio-group label {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scenario-detail {
+            background: rgba(20,20,30,0.5);
+            padding: 15px;
+            border-left: 3px solid #FF0000;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .scenario-detail p {
+            color: white;
+            margin: 2px 0;
+        }
+
+        .scenario-detail span {
+            color: #B0B0B0;
+        }
+
+        /* التبويبات */
+        .tabs-container {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            background: rgba(20, 20, 30, 0.5);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 15px 15px 0 0;
+            padding: 10px 25px;
+            color: white;
+            cursor: pointer;
+            border-bottom: none;
+        }
+
+        .tab.active {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #FF0000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* عناصر التهديدات */
+        .threat-item {
+            font-family: monospace;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .threat-item.critical { color: #ff0000; }
+        .threat-item.high { color: #FFA500; }
+        .threat-item.low { color: #B0B0B0; }
+
+        /* نتائج المحاكاة */
+        .results-section {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .results-section h2 {
+            color: #FF0000;
+            border-bottom: 2px solid #FF0000;
+            padding-bottom: 5px;
+        }
+
+        /* الفوتر */
+        .footer {
+            text-align: center;
+            color: #B0B0B0;
+            font-size: 12px;
+            padding: 20px;
+            border-top: 1px solid rgba(255,0,0,0.2);
+            margin-top: 50px;
+        }
+
+        .footer p {
+            color: #B0B0B0;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- العنوان -->
+    <div class="title-container">
+        <h1 class="main-title">OFFENSIVE INFORMED <span>DEFENSE</span> SIMULATOR</h1>
+        <p class="subtitle">ADVANCED SECURITY POSTURE ASSESSMENT PLATFORM</p>
+    </div>
+
+    <hr>
+
+    <!-- المربعات العلوية -->
+    <div class="metrics-container">
+        <div class="glass-card">
+            <p class="metric-label">THREAT LEVEL</p>
+            <p class="metric-value" id="threatLevel">HIGH</p>
+            <p class="metric-change positive" id="threatChange">▲ +12% from last scan</p>
+        </div>
+        <div class="glass-card">
+            <p class="metric-label">ATTACK SURFACE</p>
+            <p class="metric-value" id="attackSurface">127</p>
+            <p class="metric-change negative">exposed endpoints</p>
+        </div>
+        <div class="glass-card">
+            <p class="metric-label">CRITICAL VULNS</p>
+            <p class="metric-value" id="criticalVulns">8</p>
+            <p class="metric-change warning" id="vulnsChange">▲ 3 new today</p>
+        </div>
+        <div class="glass-card">
+            <p class="metric-label">SECURITY SCORE</p>
+            <p class="metric-value" id="securityScore">43</p>
+            <p class="metric-change negative" id="scoreChange">▼ -7 from baseline</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <h2>CONTROL PANEL</h2>
+            <hr>
+            <p>SELECT SCENARIO</p>
+            <select id="scenarioSelect">
+                <option value="beginner">📁 BEGINNER - Basic Web Server</option>
+                <option value="intermediate">📁 INTERMEDIATE - Advanced Windows Server</option>
+                <option value="advanced">📁 ADVANCED - Network Environment</option>
+            </select>
+
+            <hr>
+            <p class="scenario-detail-title">SCENARIO DETAILS</p>
+            <div class="scenario-detail" id="scenarioDetails">
+                <p><span>Target:</span> 192.168.1.100</p>
+                <p><span>OS:</span> Ubuntu 20.04</p>
+                <p><span>Services:</span> 3</p>
+                <p><span style="color:#B0B0B0;">High Risk:</span> <span style="color:#ff0000;">1</span></p>
+            </div>
+
+            <hr>
+            <p>ATTACK TYPE</p>
+            <div class="radio-group">
+                <label><input type="radio" name="attackType" value="ai" checked> Automated AI</label>
+                <label><input type="radio" name="attackType" value="manual"> Manual Selection</label>
+                <label><input type="radio" name="attackType" value="hybrid"> Hybrid</label>
+            </div>
+
+            <button id="startBtn">🚀 START ADVANCED SIMULATION</button>
+            <button id="exportBtn">📊 EXPORT REPORT</button>
+        </div>
+
+        <!-- التبويبات -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="openTab('threat')">🔴 THREAT ANALYSIS</button>
+                <button class="tab" onclick="openTab('metrics')">📈 SECURITY METRICS</button>
+                <button class="tab" onclick="openTab('compliance')">📋 COMPLIANCE</button>
+            </div>
+
+            <div id="threat" class="tab-content active">
+                <div class="two-columns">
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000;">LIVE THREAT FEED</h3>
+                        <p class="threat-item critical">[2026-03-12] 🔴 CRITICAL: New CVE-2026-1234 affecting OpenSSH</p>
+                        <p class="threat-item high">[2026-03-12] 🟡 HIGH: Apache 2.4.41 reaches EOL</p>
+                        <p class="threat-item high">[2026-03-12] 🟡 HIGH: RDP exposed on enterprise servers</p>
+                        <p class="threat-item low">[2026-03-12] ⚪ LOW: Regular scan completed</p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000;">AI INSIGHTS</h3>
+                        <p style="color:#B0B0B0;">Based on 1,247 attack simulations:</p>
+                        <ul style="color:white;">
+                            <li>92% of breaches start with SSH</li>
+                            <li>78% success rate on port 445</li>
+                            <li>RDP attacks increased 156% this month</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="metrics" class="tab-content">
+                <div class="glass-card">
+                    <h3 style="color:#FF0000;">Vulnerability Trends (Last 4 Weeks)</h3>
+                    <div id="chart" style="height:400px;"></div>
+                </div>
+            </div>
+
+            <div id="compliance" class="tab-content">
+                <div class="two-columns">
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000;">COMPLIANCE STATUS</h3>
+                        <p>✅ ISO 27001: <span style="color:#4CAF50;">87% compliant</span></p>
+                        <p>⚠️ NIST: <span style="color:#FFA500;">62% compliant</span></p>
+                        <p>❌ GDPR: <span style="color:#ff0000;">45% compliant</span></p>
+                        <p>✅ PCI DSS: <span style="color:#4CAF50;">91% compliant</span></p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000;">RECOMMENDATIONS</h3>
+                        <p><span style="color:#ff0000;">🔴 CRITICAL</span> - Patch OpenSSH immediately</p>
+                        <p><span style="color:#FFA500;">🟡 HIGH</span> - Update Apache to latest version</p>
+                        <p><span style="color:#FFA500;">🟡 HIGH</span> - Move RDP behind VPN</p>
+                        <p><span style="color:#C5A028;">🟢 MEDIUM</span> - Enable MFA for all users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نتائج المحاكاة -->
+    <div id="results" class="results-section" style="display: none;">
+        <h2>⚔️ SIMULATION RESULTS</h2>
+        <div class="two-columns">
+            <div class="glass-card">
+                <h3 style="color:#FF0000;">🔴 CRITICAL FINDINGS</h3>
+                <div id="criticalFindings"></div>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#FF0000;">🤖 AI DECISION LOG</h3>
+                <div id="aiDecisions"></div>
+            </div>
+        </div>
+        <div class="glass-card">
+            <h3 style="color:#FF0000;">VIEW RAW DATA</h3>
+            <pre id="rawData" style="color:white; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;"></pre>
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <div class="footer">
+        <p>OFFENSIVE INFORMED DEFENSE SIMULATOR © 2026 | Enterprise Security Assessment Platform</p>
+        <p>All simulations are performed in isolated environments. Version 2.0.0</p>
+    </div>
+
+    <script>
+        // ==================== الرسم البياني ====================
+       
+         // ==================== الرسم البياني الخطي ====================
+document.addEventListener('DOMContentLoaded', function() {
+    const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+    
+    // خط Critical
+    const trace1 = {
+        x: weeks,
+        y: [3, 5, 8, 12],
+        name: 'Critical',
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#ff0000', width: 3 },
+        marker: { size: 8 }
+    };
+    
+    // خط High
+    const trace2 = {
+        x: weeks,
+        y: [7, 9, 11, 15],
+        name: 'High',
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#FFA500', width: 3 },
+        marker: { size: 8 }
+    };
+    
+    // خط Medium
+    const trace3 = {
+        x: weeks,
+        y: [12, 14, 13, 18],
+        name: 'Medium',
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#888', width: 3 },
+        marker: { size: 8 }
+    };
+
+    const layout = {
+        title: 'Vulnerability Trends (Last 4 Weeks)',
+        plot_bgcolor: 'black',
+        paper_bgcolor: 'black',
+        font: { color: 'white', size: 12 },
+        xaxis: { 
+            title: 'Week',
+            gridcolor: '#333',
+            tickfont: { color: 'white' }
+        },
+        yaxis: { 
+            title: 'Number of Vulnerabilities',
+            gridcolor: '#333',
+            tickfont: { color: 'white' },
+            range: [0, 25]
+        },
+        showlegend: true,
+        legend: { font: { color: 'white' } }
+    };
+
+    Plotly.newPlot('chart', [trace1, trace2, trace3], layout);
+});
+        // ==================== البيانات ====================
+        const scenarios = {
+            beginner: {
+                name: "Basic Web Server",
+                difficulty: "beginner",
+                target: {
+                    os: "Ubuntu 20.04",
+                    ip: "192.168.1.100",
+                    services: [
+                        { name: "SSH", port: 22, risk: "high" },
+                        { name: "HTTP", port: 80, risk: "medium" },
+                        { name: "HTTPS", port: 443, risk: "medium" }
+                    ]
+                }
+            },
+            intermediate: {
+                name: "Advanced Windows Server",
+                difficulty: "intermediate",
+                target: {
+                    os: "Windows Server 2022",
+                    ip: "192.168.1.150",
+                    services: [
+                        { name: "RDP", port: 3389, risk: "critical" },
+                        { name: "SMB", port: 445, risk: "critical" },
+                        { name: "IIS", port: 80, risk: "medium" },
+                        { name: "MSSQL", port: 1433, risk: "medium" }
+                    ]
+                }
+            },
+            advanced: {
+                name: "Network Environment",
+                difficulty: "advanced",
+                targets: [
+                    {
+                        name: "Web Server",
+                        ip: "192.168.1.10",
+                        services: [
+                            { name: "SSH", port: 22, risk: "high" },
+                            { name: "HTTP", port: 80, risk: "medium" }
+                        ]
+                    },
+                    {
+                        name: "Database Server",
+                        ip: "192.168.1.20",
+                        services: [
+                            { name: "MySQL", port: 3306, risk: "medium" },
+                            { name: "SSH", port: 22, risk: "high" }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // ==================== محرك المحاكاة ====================
+        class AttackEngine {
+            constructor(scenario) {
+                this.scenario = scenario;
+                this.results = {
+                    vulnerabilities: [],
+                    aiDecisions: [],
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            run() {
+                if (this.scenario.targets) {
+                    this.scenario.targets.forEach(target => {
+                        target.services.forEach(service => {
+                            if (service.risk === 'critical' || service.risk === 'high') {
+                                this.results.vulnerabilities.push({
+                                    target: target.name,
+                                    service: service.name,
+                                    port: service.port,
+                                    risk: service.risk
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    this.scenario.target.services.forEach(service => {
+                        if (service.risk === 'critical' || service.risk === 'high') {
+                            this.results.vulnerabilities.push({
+                                service: service.name,
+                                port: service.port,
+                                risk: service.risk
+                            });
+                        }
+                    });
+                }
+
+                this.results.aiDecisions = this.generateAIDecisions();
+                return this.results;
+            }
+
+            generateAIDecisions() {
+                const decisions = [];
+                
+                if (this.scenario.targets) {
+                    this.scenario.targets.forEach(target => {
+                        target.services.forEach(service => {
+                            if (service.port === 3389) {
+                                decisions.push({
+                                    action: "RDP Attack",
+                                    target: target.name,
+                                    priority: "critical",
+                                    reason: "RDP port open - high risk",
+                                    tool: "crowbar"
+                                });
+                            } else if (service.port === 445) {
+                                decisions.push({
+                                    action: "SMB Exploit",
+                                    target: target.name,
+                                    priority: "critical",
+                                    reason: "SMB port open - possible EternalBlue",
+                                    tool: "metasploit"
+                                });
+                            } else if (service.port === 22) {
+                                decisions.push({
+                                    action: "SSH Attack",
+                                    target: target.name,
+                                    priority: "high",
+                                    reason: "SSH port open - try brute force",
+                                    tool: "hydra"
+                                });
+                            }
+                        });
+                    });
+                } else {
+                    this.scenario.target.services.forEach(service => {
+                        if (service.port === 3389) {
+                            decisions.push({
+                                action: "RDP Attack",
+                                priority: "critical",
+                                reason: "RDP port open - high risk",
+                                tool: "crowbar"
+                            });
+                        } else if (service.port === 445) {
+                            decisions.push({
+                                action: "SMB Exploit",
+                                priority: "critical",
+                                reason: "SMB port open - possible EternalBlue",
+                                tool: "metasploit"
+                            });
+                        } else if (service.port === 22) {
+                            decisions.push({
+                                action: "SSH Attack",
+                                priority: "high",
+                                reason: "SSH port open - try brute force",
+                                tool: "hydra"
+                            });
+                        } else if (service.port === 80 || service.port === 443) {
+                            decisions.push({
+                                action: "Web Attack",
+                                priority: "medium",
+                                reason: "Web ports open - try SQL injection",
+                                tool: "sqlmap"
+                            });
+                        }
+                    });
+                }
+                
+                return decisions;
+            }
+        }
+
+        // ==================== عناصر الصفحة ====================
+        const scenarioSelect = document.getElementById('scenarioSelect');
+        const scenarioDetails = document.getElementById('scenarioDetails');
+        const startBtn = document.getElementById('startBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const resultsSection = document.getElementById('results');
+        const criticalFindings = document.getElementById('criticalFindings');
+        const aiDecisions = document.getElementById('aiDecisions');
+        const rawData = document.getElementById('rawData');
+
+        // ==================== تحديث تفاصيل السيناريو ====================
+        function updateScenarioDetails() {
+            const selected = scenarioSelect.value;
+            const scenario = scenarios[selected];
+            
+            if (scenario.targets) {
+                const totalServices = scenario.targets.reduce((acc, t) => acc + t.services.length, 0);
+                const highRisk = scenario.targets.reduce((acc, t) => 
+                    acc + t.services.filter(s => s.risk === 'high' || s.risk === 'critical').length, 0);
+                scenarioDetails.innerHTML = `
+                    <p><span>Network:</span> ${scenario.targets.length} targets</p>
+                    <p><span>Total Services:</span> ${totalServices}</p>
+                    <p><span>High Risk:</span> <span style="color:#ff0000;">${highRisk}</span></p>
+                `;
+            } else {
+                const highRisk = scenario.target.services.filter(s => s.risk === 'high' || s.risk === 'critical').length;
+                scenarioDetails.innerHTML = `
+                    <p><span>Target:</span> ${scenario.target.ip}</p>
+                    <p><span>OS:</span> ${scenario.target.os}</p>
+                    <p><span>Services:</span> ${scenario.target.services.length}</p>
+                    <p><span>High Risk:</span> <span style="color:#ff0000;">${highRisk}</span></p>
+                `;
+            }
+        }
+
+        // ==================== تشغيل المحاكاة ====================
+        function runSimulation() {
+            const selected = scenarioSelect.value;
+            const scenario = scenarios[selected];
+            
+            const engine = new AttackEngine(scenario);
+            const results = engine.run();
+            
+            displayResults(results);
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ==================== عرض النتائج ====================
+        function displayResults(results) {
+            let findingsHTML = '';
+            results.vulnerabilities.slice(0, 5).forEach(v => {
+                findingsHTML += `
+                    <div style="background: rgba(255,0,0,0.1); border-left: 4px solid #ff0000; padding: 10px; margin: 5px 0; border-radius: 5px;">
+                        <span style="color: white;">${v.service || v.target} (port ${v.port})</span>
+                        <span style="color: #ff0000; float: right;">${v.risk.toUpperCase()}</span>
+                    </div>
+                `;
+            });
+            criticalFindings.innerHTML = findingsHTML || '<p style="color:#4CAF50;">No critical findings</p>';
+            
+            let decisionsHTML = '';
+            results.aiDecisions.forEach(d => {
+                const priorityColor = d.priority === 'critical' ? '#ff0000' : '#FFA500';
+                decisionsHTML += `
+                    <div style="background: rgba(0,0,0,0.3); padding: 10px; margin: 5px 0; border-radius: 5px;">
+                        <span style="color: white;">${d.action}</span>
+                        <span style="color: ${priorityColor}; float: right;">${d.priority.toUpperCase()}</span>
+                        <p style="color: #B0B0B0; font-size: 12px; margin: 5px 0 0;">${d.reason}</p>
+                    </div>
+                `;
+            });
+            aiDecisions.innerHTML = decisionsHTML || '<p style="color:#B0B0B0;">No AI decisions recorded</p>';
+            
+            rawData.textContent = JSON.stringify(results, null, 2);
+            
+            // تحديث الأرقام العلوية
+            document.getElementById('threatLevel').textContent = 
+                results.vulnerabilities.some(v => v.risk === 'critical') ? 'CRITICAL' : 'HIGH';
+            document.getElementById('attackSurface').textContent = 
+                results.vulnerabilities.length * 10 + 100;
+            document.getElementById('criticalVulns').textContent = 
+                results.vulnerabilities.filter(v => v.risk === 'critical').length;
+            document.getElementById('securityScore').textContent = 
+                Math.max(20, 100 - results.vulnerabilities.length * 5);
+        }
+
+        // ==================== فتح التبويبات ====================
+        window.openTab = function(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        };
+
+        // ==================== الأحداث ====================
+        scenarioSelect.addEventListener('change', updateScenarioDetails);
+        startBtn.addEventListener('click', runSimulation);
+        exportBtn.addEventListener('click', () => {
+            alert('Report generation will be available in production version');
+        });
+
+        // ==================== التحميل الأولي ====================
+        updateScenarioDetails();
+
+        // ==================== تحديث دوري (محاكاة) ====================
+        setInterval(() => {
+            document.getElementById('attackSurface').textContent = Math.floor(Math.random() * 50) + 100;
+            document.getElementById('criticalVulns').textContent = Math.floor(Math.random() * 5) + 5;
+        }, 5000);
+    </script>
+</body>
+</html>
