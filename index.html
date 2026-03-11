@@ -725,5 +725,21 @@
         // بداية
         updateScenarioDetails();
     </script>
+    <script>
+    // ضمان حركة اللمس في الجوال
+    document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+            this.style.background = 'rgba(60, 20, 20, 0.9)';
+            this.style.borderColor = '#ff0000';
+        });
+        el.addEventListener('touchend', function() {
+            this.style.transform = '';
+            this.style.background = '';
+            this.style.borderColor = '';
+        });
+    });
+</script>
 </body>
 </html>
+
