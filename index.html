@@ -437,6 +437,14 @@ select:hover,
             color: #B0B0B0;
             margin: 5px 0;
         }
+        /* تأثير اللمس بالجوال */
+.touch-highlight {
+    transform: scale(0.98) !important;
+    background: rgba(60, 20, 20, 0.9) !important;
+    border-color: #ff0000 !important;
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.8) !important;
+    transition: none !important;
+}
     </style>
 </head>
 <body>
@@ -712,8 +720,32 @@ select:hover,
         updateScenarioDetails();
     
 
-    
+    <script>
+    // ضبط حركة المرور بالجوال
+    document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
+        // عند لمس العنصر
+        el.addEventListener('touchstart', function() {
+            this.classList.add('touch-highlight');
+        });
+        
+        // عند رفع الإصبع
+        el.addEventListener('touchend', function() {
+            this.classList.remove('touch-highlight');
+        });
+        
+        // إذا تحرك الإصبع خارج العنصر
+        el.addEventListener('touchmove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const touch = e.touches[0];
+            if (touch.clientX < rect.left || touch.clientX > rect.right ||
+                touch.clientY < rect.top || touch.clientY > rect.bottom) {
+                this.classList.remove('touch-highlight');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
+
 
