@@ -117,27 +117,22 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* حركة اللمس الفورية */
-       .glass-card:hover,
-button:hover,
-select:hover,
-.tab:hover,
-.scenario-detail:hover {
+        /* تأثير اللمس لجميع المربعات */
+        .glass-card.touch-highlight,
+        button.touch-highlight,
+        select.touch-highlight,
+        .tab.touch-highlight,
+        .scenario-detail.touch-highlight {
             transform: scale(0.98) !important;
             background: rgba(60, 20, 20, 0.9) !important;
             border-color: #ff0000 !important;
             box-shadow: 0 0 40px rgba(255, 0, 0, 0.8) !important;
+            transition: none !important;
         }
 
         /* للكمبيوتر hover */
         @media (hover: hover) {
-            .glass-card:hover {
-                transform: translateY(-5px) scale(1.02);
-                box-shadow: 0 20px 40px rgba(255, 0, 0, 0.4);
-                border-color: #ff0000;
-                background: rgba(40, 40, 50, 0.9);
-            }
-            
+            .glass-card:hover,
             button:hover,
             select:hover,
             .tab:hover,
@@ -437,14 +432,6 @@ select:hover,
             color: #B0B0B0;
             margin: 5px 0;
         }
-        /* تأثير اللمس بالجوال */
-.touch-highlight {
-    transform: scale(0.98) !important;
-    background: rgba(60, 20, 20, 0.9) !important;
-    border-color: #ff0000 !important;
-    box-shadow: 0 0 40px rgba(255, 0, 0, 0.8) !important;
-    transition: none !important;
-}
     </style>
 </head>
 <body>
@@ -718,34 +705,37 @@ select:hover,
 
         // بداية
         updateScenarioDetails();
-    
+    </script>
 
+    <!-- كود اللمس لجميع المربعات -->
     <script>
-    // ضبط حركة المرور بالجوال
-    document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
-        // عند لمس العنصر
-        el.addEventListener('touchstart', function() {
-            this.classList.add('touch-highlight');
-        });
-        
-        // عند رفع الإصبع
-        el.addEventListener('touchend', function() {
-            this.classList.remove('touch-highlight');
-        });
-        
-        // إذا تحرك الإصبع خارج العنصر
-        el.addEventListener('touchmove', function(e) {
-            const rect = this.getBoundingClientRect();
-            const touch = e.touches[0];
-            if (touch.clientX < rect.left || touch.clientX > rect.right ||
-                touch.clientY < rect.top || touch.clientY > rect.bottom) {
+        // تأثير اللمس على كل المربعات
+        document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
+            // عند لمس العنصر
+            el.addEventListener('touchstart', function(e) {
+                this.classList.add('touch-highlight');
+            });
+            
+            // عند رفع الإصبع
+            el.addEventListener('touchend', function(e) {
                 this.classList.remove('touch-highlight');
-            }
+            });
+            
+            // إذا تحرك الإصبع خارج العنصر
+            el.addEventListener('touchmove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const touch = e.touches[0];
+                if (touch.clientX < rect.left || touch.clientX > rect.right ||
+                    touch.clientY < rect.top || touch.clientY > rect.bottom) {
+                    this.classList.remove('touch-highlight');
+                }
+            });
+            
+            // إذا لمس ثم تحرك
+            el.addEventListener('touchcancel', function(e) {
+                this.classList.remove('touch-highlight');
+            });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
-
-
