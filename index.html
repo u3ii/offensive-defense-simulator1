@@ -743,6 +743,41 @@
         document.getElementById('results').style.display = 'block';
     });
 </script>
+        <script>
+    function runSimulation() {
+    const s = scenarios[scenarioSelect.value];
+    const results = {
+        vulnerabilities: [],
+        aiDecisions: []
+    };
+    
+    if(s.targets) {
+        s.targets.forEach(t => {
+            t.services.forEach(service => {
+                if(service.risk) results.vulnerabilities.push(service);
+            });
+        });
+    } else {
+        s.target.services.forEach(service => {
+            if(service.risk) results.vulnerabilities.push(service);
+        });
+    }
+    
+    let f = '';
+    results.vulnerabilities.forEach(v => {
+        f += `<div style="background:rgba(255,0,0,0.1); border-left:4px solid red; padding:8px; margin:5px;">
+                <span>${v.name}</span>
+                <span style="color:red; float:right;">${v.risk}</span>
+              </div>`;
+    });
+    criticalFindings.innerHTML = f || '<p>No critical findings</p>';
+    
+    aiDecisions.innerHTML = '<p>AI analysis complete</p>';
+    
+    resultsSection.style.display = 'block';
+}
+    </script>
 </body>
 </html>
+
 
