@@ -577,8 +577,7 @@
         <p>OFFENSIVE DEFENSE SIMULATOR © 2026</p>
         <p>Version 2.0.0</p>
     </div>
-
-    <script>
+<script>
         // الرسم البياني الخطي
         document.addEventListener('DOMContentLoaded', function() {
             const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
@@ -640,8 +639,6 @@
         const startBtn = document.getElementById('startBtn');
         const exportBtn = document.getElementById('exportBtn');
         const resultsSection = document.getElementById('results');
-        const criticalFindings = document.getElementById('criticalFindings');
-        const aiDecisions = document.getElementById('aiDecisions');
 
         // تحديث التفاصيل
         function updateScenarioDetails() {
@@ -657,38 +654,38 @@
             }
         }
 
-        // تشغيل
+        // تشغيل المحاكاة وعرض النتائج
         function runSimulation() {
-            const s = scenarios[scenarioSelect.value];
-            const results = {
-                vulnerabilities: [],
-                aiDecisions: []
-            };
-            
-            if(s.targets) {
-                s.targets.forEach(t => {
-                    t.services.forEach(service => {
-                        if(service.risk) results.vulnerabilities.push(service);
-                    });
-                });
-            } else {
-                s.target.services.forEach(service => {
-                    if(service.risk) results.vulnerabilities.push(service);
-                });
-            }
-            
-            let f = '';
-            results.vulnerabilities.forEach(v => {
-                f += `<div style="background:rgba(255,0,0,0.1); border-left:4px solid red; padding:8px; margin:5px;">
-                        <span>${v.name}</span>
-                        <span style="color:red; float:right;">${v.risk}</span>
-                      </div>`;
-            });
-            criticalFindings.innerHTML = f || '<p>No critical findings</p>';
-            
-            aiDecisions.innerHTML = '<p>AI analysis complete</p>';
-            
+            // إظهار قسم النتائج
             resultsSection.style.display = 'block';
+            
+            // عرض النتائج بشكل منسق
+            resultsSection.innerHTML = `
+                <h2 style="color: #FF0000; border-bottom: 2px solid #FF0000; padding-bottom: 5px; margin-bottom: 20px;">⚔️ SIMULATION RESULTS</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000; margin-bottom: 15px;">📊 Vulnerability Summary</h3>
+                        <p><span style="color:#ff0000;">🔴 Critical:</span> 3</p>
+                        <p><span style="color:#FFA500;">🟡 High:</span> 5</p>
+                        <p><span style="color:#888;">⚪ Medium:</span> 12</p>
+                        <p style="margin-top: 10px; color: #4CAF50;">Total Vulnerabilities: 20</p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="color:#FF0000; margin-bottom: 15px;">🔧 Recommendations</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin: 10px 0; padding: 8px; background: rgba(255,0,0,0.1); border-left: 4px solid #ff0000;">
+                                <span style="color:#ff0000;">🔴</span> Patch OpenSSH immediately
+                            </li>
+                            <li style="margin: 10px 0; padding: 8px; background: rgba(255,165,0,0.1); border-left: 4px solid #FFA500;">
+                                <span style="color:#FFA500;">🟡</span> Update Apache to latest version
+                            </li>
+                            <li style="margin: 10px 0; padding: 8px; background: rgba(255,165,0,0.1); border-left: 4px solid #FFA500;">
+                                <span style="color:#FFA500;">🟡</span> Close port 445 (SMB)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
         }
 
         // فتح التبويبات
@@ -702,27 +699,19 @@
         // أحداث
         scenarioSelect.addEventListener('change', updateScenarioDetails);
         startBtn.addEventListener('click', runSimulation);
-        exportBtn.addEventListener('click', () => alert('Report coming soon'));
+        exportBtn.addEventListener('click', () => alert('Report generation coming soon'));
 
         // بداية
         updateScenarioDetails();
-    </script>
 
-    <!-- كود اللمس لجميع المربعات -->
-    <script>
-        // تأثير اللمس على كل المربعات
+        // تأثير اللمس لجميع المربعات
         document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
-            // عند لمس العنصر
             el.addEventListener('touchstart', function(e) {
                 this.classList.add('touch-highlight');
             });
-            
-            // عند رفع الإصبع
             el.addEventListener('touchend', function(e) {
                 this.classList.remove('touch-highlight');
             });
-            
-            // إذا تحرك الإصبع خارج العنصر
             el.addEventListener('touchmove', function(e) {
                 const rect = this.getBoundingClientRect();
                 const touch = e.touches[0];
@@ -731,82 +720,11 @@
                     this.classList.remove('touch-highlight');
                 }
             });
-            
-            // إذا لمس ثم تحرك
             el.addEventListener('touchcancel', function(e) {
                 this.classList.remove('touch-highlight');
             });
         });
     </script>
-    <script>
-    // تشغيل السيناريو عند الضغط
-    document.getElementById('startBtn').addEventListener('click', function() {
-        document.getElementById('results').style.display = 'block';
-    });
-</script>
-        <script>
-    function runSimulation() {
-    const s = scenarios[scenarioSelect.value];
-    const results = {
-        vulnerabilities: [],
-        aiDecisions: []
-    };
-    
-    if(s.targets) {
-        s.targets.forEach(t => {
-            t.services.forEach(service => {
-                if(service.risk) results.vulnerabilities.push(service);
-            });
-        });
-    } else {
-        s.target.services.forEach(service => {
-            if(service.risk) results.vulnerabilities.push(service);
-        });
-    }
-    
-    let f = '';
-    results.vulnerabilities.forEach(v => {
-        f += `<div style="background:rgba(255,0,0,0.1); border-left:4px solid red; padding:8px; margin:5px;">
-                <span>${v.name}</span>
-                <span style="color:red; float:right;">${v.risk}</span>
-              </div>`;
-    });
-    criticalFindings.innerHTML = f || '<p>No critical findings</p>';
-    
-    aiDecisions.innerHTML = '<p>AI analysis complete</p>';
-    
-    resultsSection.style.display = 'block';
-}
-    </script>
-      <script>
-    // تشغيل السيناريو عند الضغط على START
-    document.getElementById('startBtn').addEventListener('click', function() {
-        // إظهار قسم النتائج
-        document.getElementById('results').style.display = 'block';
-        
-        // عرض النتائج بشكل منسق
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = `
-            <h2>⚔️ SIMULATION RESULTS</h2>
-            <div class="glass-card">
-                <h3 style="color:#FF0000;">Vulnerabilities Found: 8</h3>
-                <p style="color:#ff0000;">🔴 Critical: 3</p>
-                <p style="color:#FFA500;">🟡 High: 5</p>
-                <p style="color:#888;">⚪ Medium: 12</p>
-            </div>
-            <div class="glass-card">
-                <h3 style="color:#FF0000;">Recommendations</h3>
-                <ul>
-                    <li><span style="color:#ff0000;">🔴</span> Patch OpenSSH immediately</li>
-                    <li><span style="color:#FFA500;">🟡</span> Update Apache to latest version</li>
-                    <li><span style="color:#FFA500;">🟡</span> Close port 445 (SMB)</li>
-                </ul>
-            </div>
-        `;
-    });
-</script>
 </body>
 </html>
-
-
-
+   
