@@ -571,7 +571,8 @@
         </div>
     </div>
 
-    <!-- الفوتر -->
+  <div id="results" class="results-section" style="display: none;"> 
+      <!-- الفوتر -->
     <div class="footer">
         <p>OFFENSIVE DEFENSE SIMULATOR © 2026</p>
         <p>Version 2.0.0</p>
@@ -777,7 +778,35 @@
     resultsSection.style.display = 'block';
 }
     </script>
+      <script>
+    // تشغيل السيناريو عند الضغط على START
+    document.getElementById('startBtn').addEventListener('click', function() {
+        // إظهار قسم النتائج
+        document.getElementById('results').style.display = 'block';
+        
+        // عرض النتائج بشكل منسق
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `
+            <h2>⚔️ SIMULATION RESULTS</h2>
+            <div class="glass-card">
+                <h3 style="color:#FF0000;">Vulnerabilities Found: 8</h3>
+                <p style="color:#ff0000;">🔴 Critical: 3</p>
+                <p style="color:#FFA500;">🟡 High: 5</p>
+                <p style="color:#888;">⚪ Medium: 12</p>
+            </div>
+            <div class="glass-card">
+                <h3 style="color:#FF0000;">Recommendations</h3>
+                <ul>
+                    <li><span style="color:#ff0000;">🔴</span> Patch OpenSSH immediately</li>
+                    <li><span style="color:#FFA500;">🟡</span> Update Apache to latest version</li>
+                    <li><span style="color:#FFA500;">🟡</span> Close port 445 (SMB)</li>
+                </ul>
+            </div>
+        `;
+    });
+</script>
 </body>
 </html>
+
 
 
