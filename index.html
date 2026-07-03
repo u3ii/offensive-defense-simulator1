@@ -114,43 +114,6 @@
             }
         }
 
-        .team-info {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .team-info span {
-            color: #b0b5c4 !important;
-            font-size: 13px;
-            letter-spacing: 1px;
-            font-weight: 400;
-        }
-
-        .team-info span::before {
-            content: '';
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: #75020f;
-            border-radius: 50%;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        @media (max-width: 600px) {
-            .team-info span {
-                font-size: 11px;
-            }
-            .team-info {
-                gap: 12px;
-            }
-        }
-
         .project-idea {
             max-width: 1000px;
             margin: 0 auto 20px;
@@ -693,6 +656,24 @@
             font-weight: 700;
         }
 
+        .icon-chart::before {
+            content: '▤ ';
+            color: #75020f;
+            font-weight: 700;
+        }
+
+        .icon-shield::before {
+            content: '◈ ';
+            color: #75020f;
+            font-weight: 700;
+        }
+
+        .icon-target::before {
+            content: '◎ ';
+            color: #51080d;
+            font-weight: 700;
+        }
+
         .results-section {
             max-width: 1400px;
             margin: 20px auto;
@@ -801,10 +782,6 @@
                 padding: 8px 12px;
             }
 
-            .team-info span {
-                font-size: 10px;
-            }
-
             .service-tag {
                 font-size: 10px;
                 padding: 1px 8px;
@@ -819,11 +796,6 @@
     <div class="header-container">
         <h1 class="main-title">OFFENSIVE INFORMED <span>DEFENSE</span> SIMULATOR</h1>
         <p class="subtitle">Advanced Security Platform</p>
-        <div class="team-info">
-            <span>Heba Al-Tamimi</span>
-            <span>Raghad Al-Shammari</span>
-            <span>Farah Abdullah</span>
-        </div>
     </div>
 
     <div class="project-idea">
