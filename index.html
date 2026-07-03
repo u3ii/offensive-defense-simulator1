@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Offensive Defense Simulator</title>
-    <!-- Plotly CDN -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +23,6 @@
             padding: 20px;
         }
 
-        /* ===== شبكة الخلفية ===== */
         body::before {
             content: '';
             position: fixed;
@@ -41,7 +38,6 @@
             z-index: 0;
         }
 
-        /* ===== زوايا متوهجة خفيفة ===== */
         .corner-glow {
             position: fixed;
             top: -80px;
@@ -64,7 +60,6 @@
             pointer-events: none;
         }
 
-        /* ===== العنوان الرئيسي ===== */
         .header-container {
             text-align: center;
             margin: 10px auto 20px;
@@ -119,7 +114,6 @@
             }
         }
 
-        /* ===== معلومات الفريق ===== */
         .team-info {
             display: flex;
             justify-content: center;
@@ -157,7 +151,6 @@
             }
         }
 
-        /* ===== Project Idea ===== */
         .project-idea {
             max-width: 1000px;
             margin: 0 auto 20px;
@@ -204,12 +197,10 @@
             }
         }
 
-        /* ===== كل النصوص ===== */
         h1, h2, h3, h4, h5, h6, p, li, span, label {
             color: #e8ecf4 !important;
         }
 
-        /* ===== خطوط أنيقة ===== */
         hr {
             border: none;
             height: 1px;
@@ -218,7 +209,6 @@
             opacity: 0.5;
         }
 
-        /* ===== المربعات الزجاجية ===== */
         .glass-card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(12px);
@@ -237,7 +227,6 @@
             background: rgba(255, 255, 255, 0.04);
         }
 
-        /* ===== تأثير hover للعناصر ===== */
         @media (hover: hover) {
             button:hover {
                 transform: translateY(-2px);
@@ -269,7 +258,6 @@
             }
         }
 
-        /* ===== تأثير اللمس ===== */
         .glass-card.touch-highlight,
         button.touch-highlight,
         select.touch-highlight,
@@ -282,7 +270,6 @@
             transition: none !important;
         }
 
-        /* ===== المربعات العلوية ===== */
         .metrics-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -353,7 +340,6 @@
             background: rgba(255, 165, 0, 0.06);
         }
 
-        /* ===== المحتوى الرئيسي ===== */
         .main-content {
             display: grid;
             grid-template-columns: 1fr;
@@ -373,7 +359,6 @@
             }
         }
 
-        /* ===== الشريط الجانبي ===== */
         .sidebar {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.04);
@@ -412,7 +397,6 @@
             font-weight: 600;
         }
 
-        /* ===== الأزرار والقوائم ===== */
         select, button {
             width: 100%;
             padding: 14px 16px;
@@ -510,7 +494,6 @@
             color: #FFA500 !important;
         }
 
-        /* ===== التبويبات ===== */
         .tabs-container {
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(12px);
@@ -591,7 +574,6 @@
             }
         }
 
-        /* ===== عناصر التهديدات ===== */
         .threat-item {
             font-family: 'Courier New', monospace;
             padding: 10px 12px;
@@ -633,7 +615,6 @@
             color: #51080d;
         }
 
-        /* ===== AI Insights ===== */
         .insight-list {
             list-style: none;
             padding: 0;
@@ -658,7 +639,6 @@
             color: #f0f2f8;
         }
 
-        /* ===== Compliance ===== */
         .compliance-item {
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -687,7 +667,6 @@
             font-weight: 700;
         }
 
-        /* ===== Recommendations ===== */
         .rec-item {
             padding: 10px 12px;
             margin: 6px 0;
@@ -714,7 +693,6 @@
             font-weight: 700;
         }
 
-        /* ===== نتائج المحاكاة ===== */
         .results-section {
             max-width: 1400px;
             margin: 20px auto;
@@ -740,7 +718,6 @@
             font-weight: 300;
         }
 
-        /* ===== الفوتر ===== */
         .footer {
             text-align: center;
             color: #8a8f9e !important;
@@ -758,7 +735,6 @@
             letter-spacing: 1px;
         }
 
-        /* ===== تحسين التمرير ===== */
         ::-webkit-scrollbar {
             width: 5px;
             background: #0a090b;
@@ -773,7 +749,6 @@
             background: #75020f;
         }
 
-        /* ===== تحسينات للجوال ===== */
         @media (max-width: 600px) {
             body {
                 padding: 12px;
@@ -838,16 +813,12 @@
     </style>
 </head>
 <body>
-
-    <!-- ===== زوايا متوهجة ===== -->
     <div class="corner-glow"></div>
     <div class="corner-glow-bottom"></div>
 
-    <!-- ===== العنوان الرئيسي ===== -->
     <div class="header-container">
         <h1 class="main-title">OFFENSIVE INFORMED <span>DEFENSE</span> SIMULATOR</h1>
         <p class="subtitle">Advanced Security Platform</p>
-        
         <div class="team-info">
             <span>Heba Al-Tamimi</span>
             <span>Raghad Al-Shammari</span>
@@ -855,7 +826,6 @@
         </div>
     </div>
 
-    <!-- ===== Project Idea ===== -->
     <div class="project-idea">
         <h3>Project Idea</h3>
         <p>
@@ -871,7 +841,6 @@
 
     <hr>
 
-    <!-- ===== المربعات العلوية (مع التعديلات) ===== -->
     <div class="metrics-container">
         <div class="glass-card">
             <p class="metric-label">Threat Level</p>
@@ -897,9 +866,7 @@
 
     <hr>
 
-    <!-- ===== المحتوى الرئيسي ===== -->
     <div class="main-content">
-        <!-- الشريط الجانبي -->
         <div class="sidebar">
             <h2>Control Panel</h2>
             <hr>
@@ -934,7 +901,6 @@
             <button id="exportBtn">Export Report</button>
         </div>
 
-        <!-- التبويبات -->
         <div class="tabs-container">
             <div class="tabs">
                 <button class="tab active" onclick="openTab('threat')">Threat</button>
@@ -987,17 +953,14 @@
         </div>
     </div>
 
-    <!-- ===== نتائج المحاكاة ===== -->
     <div id="results" class="results-section" style="display: none;"></div>
 
-    <!-- ===== الفوتر ===== -->
     <div class="footer">
         <p>Offensive Defense Simulator ©️ 2026</p>
         <p>Version 2.0.0</p>
     </div>
 
     <script>
-        // ===== الرسم البياني الخطي =====
         document.addEventListener('DOMContentLoaded', function() {
             const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
             
@@ -1061,7 +1024,6 @@
             Plotly.newPlot('chart', [trace1, trace2, trace3], layout, {responsive: true});
         });
 
-        // ===== البيانات =====
         const scenarios = {
             beginner: { 
                 target: { 
@@ -1093,14 +1055,12 @@
             }
         };
 
-        // ===== عناصر =====
         const scenarioSelect = document.getElementById('scenarioSelect');
         const scenarioDetails = document.getElementById('scenarioDetails');
         const startBtn = document.getElementById('startBtn');
         const exportBtn = document.getElementById('exportBtn');
         const resultsSection = document.getElementById('results');
 
-        // ===== تحديث التفاصيل =====
         function updateScenarioDetails() {
             const s = scenarios[scenarioSelect.value];
             if(s.targets) {
@@ -1118,7 +1078,6 @@
             }
         }
 
-        // ===== تشغيل المحاكاة =====
         function runSimulation() {
             resultsSection.style.display = 'block';
             
@@ -1221,7 +1180,6 @@ ${JSON.stringify(resultData, null, 4)}
             `;
         }
 
-        // ===== فتح التبويبات =====
         window.openTab = function(tabName) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
@@ -1229,15 +1187,12 @@ ${JSON.stringify(resultData, null, 4)}
             event.target.classList.add('active');
         };
 
-        // ===== أحداث =====
         scenarioSelect.addEventListener('change', updateScenarioDetails);
         startBtn.addEventListener('click', runSimulation);
         exportBtn.addEventListener('click', () => alert('Report generation coming soon'));
 
-        // ===== بداية =====
         updateScenarioDetails();
 
-        // ===== تأثير اللمس =====
         document.querySelectorAll('.glass-card, button, select, .tab, .scenario-detail').forEach(el => {
             el.addEventListener('touchstart', function(e) {
                 this.classList.add('touch-highlight');
